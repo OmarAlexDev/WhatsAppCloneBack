@@ -1,0 +1,9 @@
+POST http://localhost:3001/MINKAN/api/messages
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QxIiwiaWQiOiI2MzlmNDZjZGFjNGMwYTk1MDk1ZDYyM2EiLCJpYXQiOjE2NzE0MDk3NDgsImV4cCI6MTY3MTQxMzM0OH0.UsUvIK-u04rWjFgekXHY2a1mT6OWNRsGypojIZh9evw
+Content-Type: application/json
+
+{
+    "remittent":"test1",
+    "destinatary":"test",
+    "content":"third message of this chat"
+}

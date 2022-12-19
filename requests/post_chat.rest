@@ -1,0 +1,8 @@
+POST http://localhost:3001/MINKAN/api/chats
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QyIiwiaWQiOiI2MzlmNzJlMzJiYTAzNmRmYjZhOTZiMDkiLCJpYXQiOjE2NzE0MDcwNzgsImV4cCI6MTY3MTQxMDY3OH0.OWnn30d8nG6Rz0oVB0Rk7p6PdUzKHOrTNJtowkW2xpg
+Content-Type: application/json
+
+{
+    "user1":"test1",
+    "user2":"test"
+}

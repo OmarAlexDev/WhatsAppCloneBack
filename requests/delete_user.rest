@@ -1,0 +1,1 @@
+DELETE http://localhost:3001/MINKAN/api/users/639eb2a22b020719beac1bb
