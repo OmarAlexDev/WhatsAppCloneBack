@@ -30,12 +30,13 @@ messageRouter.post('/', async(req,res)=>{
         return res.status(402).json({error:"Unauthorized token access"})
     }
 
-    const newMessage = new Message({
+    const message = new Message({
         remittent: existentRemittent._id,
         destinatary: existentDestinatary._id,
         content: content
     })
-    await newMessage.save()
+    const newMessage = await message.save()
+    console.log(newMessage)
     const existentChat = await Chat.findOne({
         $or: [
             {user1:existentRemittent._id, user2: existentDestinatary._id},
@@ -50,11 +51,11 @@ messageRouter.post('/', async(req,res)=>{
             messages:[newMessage._id]
         })
         await newChat.save()
-        return res.status(204).json(newMessage)
+        return res.status(201).json(newMessage)
     }
     existentChat.messages = existentChat.messages.concat(newMessage._id)
     await existentChat.save()
-    return res.status(204).json(newMessage)
+    return res.status(201).json(newMessage)
 })
 
 messageRouter.delete('/:id', async(req,res)=>{  
@@ -69,8 +70,8 @@ messageRouter.delete('/:id', async(req,res)=>{
 
     messageToDelete.content="Se eliminó este mensaje"
     messageToDelete.active=false
-    messageToDelete.save()
-    res.status(202).json({message:`Removed content from message ${messageToDelete._id}`})
+    const deletedMessage = await messageToDelete.save()
+    res.status(202).json(deletedMessage)
 })
 
 module.exports = messageRouter

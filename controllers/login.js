@@ -6,12 +6,10 @@ const loginRouter = require('express').Router()
 const User = require('../models/User')
 
 loginRouter.post('/',async (req,res)=>{
-    const {username,password,rePassword} = req.body
+    const {username,password} = req.body
 
-    if(!(username && password&&rePassword)||(username && password && rePassword)===""){
+    if(!(username && password)||(username && password)===""){
         return res.status(402).json({error: "Missing parameters"})
-    }else if(password!==rePassword){
-        return res.status(402).json({error:"Mismatch passwords"})
     }
 
     const existingUser = await User.findOne({username:username})
@@ -25,7 +23,7 @@ loginRouter.post('/',async (req,res)=>{
     }
 
     const token = jwt.sign(user,config.SECRET,{expiresIn:60*60})
-    res.status(200).send({token:token,username:existingUser.username})
+    res.status(200).send({token:token,username:existingUser.username,id:existingUser._id.toString()})
 
 })
 

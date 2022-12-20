@@ -17,7 +17,6 @@ chatRouter.get('/:id', async(req,res)=>{
 })
 
 chatRouter.get('/byUser/:id', async(req,res)=>{
-
     const decodedToken = jwt.verify(req.token,config.SECRET)
     if(decodedToken.id!==req.params.id){
         return res.status(402).json({error:"Unauthorized token access"})
@@ -32,7 +31,7 @@ chatRouter.get('/byUser/:id', async(req,res)=>{
             {user1:existingUser._id},
             {user2:existingUser._id}
         ]
-    })
+    }).populate('user1',{username:1}).populate('user2',{username:1}).populate('messages',{content:1,remittent:1,destinatary:1,time:1,active:1})
     return res.json(chats)
 })
 
