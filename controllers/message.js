@@ -45,13 +45,14 @@ messageRouter.post('/', async(req,res)=>{
     })
 
     if(!existentChat){
-        const newChat = new Chat({
+        const chat = new Chat({
             user1: existentRemittent._id,
             user2: existentDestinatary._id,
             messages:[newMessage._id]
         })
-        await newChat.save()
-        return res.status(201).json(newMessage)
+        const newChat = await chat.save()
+        const savedChat = await Chat.findById(newChat._id).populate('user1',{username:1}).populate('user2',{username:1}).populate('messages',{content:1,remittent:1,destinatary:1,active:1,time:1})
+        return res.status(201).json(savedChat)
     }
     existentChat.messages = existentChat.messages.concat(newMessage._id)
     await existentChat.save()
@@ -64,7 +65,7 @@ messageRouter.delete('/:id', async(req,res)=>{
 
     if(!messageToDelete){
         return res.status(400).json({error:"Nonexistent message"})
-    }else if(decodedToken.id!==messageToDelete.remittent.toString()){
+    }else if(decodedToken.id!==messageToDelete.remittent.toString() && decodedToken.id!==messageToDelete.destinatary.toString()){
         return res.status(402).json({error:"Unauthorized token access"})
     }
 
