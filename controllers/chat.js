@@ -7,12 +7,12 @@ const User = require('../models/User')
 const middleware = require('../utils/middleware')
 
 chatRouter.get('/', async(req,res)=>{
-    const chats = await Chat.find({}).populate('user1',{username:1}).populate('user2',{username:1}).populate('messages',{content:1,remittent:1,destinatary:1})
+    const chats = await Chat.find({}).populate('user1',{username:1,state:1,profileimage:1}).populate('user2',{username:1,state:1,profileimage:1}).populate('messages',{content:1,remittent:1,destinatary:1})
     return res.json(chats)
 })
 
 chatRouter.get('/:id', async(req,res)=>{
-    const chat = await Chat.findByIdAndDelete(req.params.id).populate('user1',{username:1}).populate('user2',{username:1}).populate('messages',{content:1,remittent:1,destinatary:1})
+    const chat = await Chat.findByIdAndDelete(req.params.id).populate('user1',{username:1,state:1,profileimage:1}).populate('user2',{username:1,state:1,profileimage:1}).populate('messages',{content:1,remittent:1,destinatary:1})
     return res.json(chat)
 })
 
@@ -31,7 +31,7 @@ chatRouter.get('/byUser/:id', async(req,res)=>{
             {user1:existingUser._id},
             {user2:existingUser._id}
         ]
-    }).populate('user1',{username:1}).populate('user2',{username:1}).populate('messages',{content:1,remittent:1,destinatary:1,time:1,active:1})
+    }).populate('user1',{username:1,state:1,profileimage:1}).populate('user2',{username:1,state:1,profileimage:1}).populate('messages',{content:1,remittent:1,destinatary:1,time:1,active:1})
     return res.json(chats)
 })
 
@@ -88,6 +88,13 @@ chatRouter.delete('/:id', async(req,res)=>{     //check how to delete both user 
     }
     await chatToDelete.delete()
     res.status(202).json({message:`Deleted chat ${req.params.id} and all its entries`})
+})
+
+chatRouter.delete('/', async(req,res)=>{
+    await Chat.deleteMany()
+    await User.deleteMany()
+    await Message.deleteMany()
+    res.status(202).json({message: 'All registries in database removed'})
 })
 
 module.exports = chatRouter

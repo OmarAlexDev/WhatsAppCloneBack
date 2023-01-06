@@ -2,6 +2,6 @@ POST http://localhost:3001/MINKAN/api/users
 Content-Type: application/json
 
 {
-    "username":"test4",
-    "password":"test4"
+    "username":"test3",
+    "password":"test3"
 }

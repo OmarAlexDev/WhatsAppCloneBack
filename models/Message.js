@@ -16,12 +16,15 @@ const messageSchema = new mongoose.Schema({
         default: ""
     },
     time: {
-        type: Date,
-        default: new Date()
+        type: Date
     },
     active:{
         type: Boolean,
         default: true
+    },
+    seen:{
+        type: Boolean,
+        default: false
     }
 })
 

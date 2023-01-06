@@ -33,7 +33,8 @@ messageRouter.post('/', async(req,res)=>{
     const message = new Message({
         remittent: existentRemittent._id,
         destinatary: existentDestinatary._id,
-        content: content
+        content: content,
+        time: new Date()
     })
     const newMessage = await message.save()
     console.log(newMessage)
@@ -51,7 +52,7 @@ messageRouter.post('/', async(req,res)=>{
             messages:[newMessage._id]
         })
         const newChat = await chat.save()
-        const savedChat = await Chat.findById(newChat._id).populate('user1',{username:1}).populate('user2',{username:1}).populate('messages',{content:1,remittent:1,destinatary:1,active:1,time:1})
+        const savedChat = await Chat.findById(newChat._id).populate('user1',{username:1,state:1,profileimage:1}).populate('user2',{username:1,state:1,profileimage:1}).populate('messages',{content:1,remittent:1,destinatary:1,active:1,time:1})
         return res.status(201).json(savedChat)
     }
     existentChat.messages = existentChat.messages.concat(newMessage._id)

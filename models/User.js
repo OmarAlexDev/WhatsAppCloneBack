@@ -2,13 +2,20 @@ const mongoose = require('mongoose')
 
 const userSchema = new mongoose.Schema({
     profileimage:{
-        type: String
+        type: String,
+        default: ''
     },
     username:{
-        type: String
+        type: String,
+        required: true
     },
     passwordHash:{
-        type: String
+        type: String,
+        required: true
+    },
+    state:{
+        type: String,
+        default: 'Hola! Estoy usando WhatsAppClone'
     }
 })
 
