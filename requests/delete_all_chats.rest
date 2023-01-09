@@ -1,1 +1,1 @@
-DELETE http://localhost:3001/MINKAN/api/chats/
+DELETE http://localhost:3001/MINKAN/api/chats/all/end

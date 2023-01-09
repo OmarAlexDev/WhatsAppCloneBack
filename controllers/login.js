@@ -23,7 +23,13 @@ loginRouter.post('/',async (req,res)=>{
     }
 
     const token = jwt.sign(user,config.SECRET,{expiresIn:60*60})
-    res.status(200).send({token:token,username:existingUser.username,id:existingUser._id.toString()})
+    res.status(200).send(
+        {
+            token:token,
+            username:existingUser.username,
+            id:existingUser._id.toString(), 
+            state:existingUser.state, 
+            profileImage:existingUser.profileImage})
 
 })
 

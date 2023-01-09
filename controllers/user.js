@@ -15,10 +15,14 @@ userRouter.get('/:id', async (req,res)=>{
 })
 
 userRouter.post('/', async (req,res)=>{
-    const {username,password} = req.body
+    const {username,password, rePassword} = req.body
 
-    if(!(username && password)||(username && password)===""){
+    if(!(username && password && rePassword)||(username && password && rePassword)===""){
         return res.status(402).json({error: "Missing parameters"})
+    }
+
+    if(rePassword!==password){
+        return res.status(401).json({error: "Passwords mismatch"})
     }
 
     if(await User.findOne({username:username})){
