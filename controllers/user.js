@@ -1,7 +1,10 @@
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
+const jwt = require('jsonwebtoken')
+const config = require ('../utils/config')
 const logger = require('../utils/logger')
 const User = require('../models/User')
+const tokenGenerator = require('../utils/tokenGenerator')
 const userRouter = require('express').Router()
 
 userRouter.get('/',async (req,res)=>{
@@ -39,6 +42,31 @@ userRouter.post('/', async (req,res)=>{
 
     const savedUser = await newUser.save()
     return res.status(200).json(savedUser)
+})
+
+userRouter.put('/:id',  async(req,res)=>{
+    const {username, state, profileImage} = req.body
+    const decodedToken = jwt.verify(req.token,config.SECRET)
+    const existingUser = await User.findById(req.params.id)
+    const usernameInUse = await User.findOne({username:username})
+
+    if(!(username && state)||(username)===''){
+        return res.status(402).json({error: "Missing parameters"})
+    }else if(!existingUser){
+        return res.status(402).json({error: "Nonexistent id"})
+    }else if(decodedToken.id!==req.params.id){
+        return res.status(402).json({error:"Unauthorized token access"})
+    }else if(usernameInUse && usernameInUse._id.toString()!==existingUser._id.toString()){
+        return res.status(402).json({error:"Username already in use"})
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(req.params.id,{username:username,state:state, profileImage: profileImage},{new:true})
+    await updatedUser.save()
+
+    const sessionObject = tokenGenerator.generateToken(updatedUser)
+
+    res.status(200).send(sessionObject)
+
 })
 
 userRouter.delete('/:id', async (req,res)=>{

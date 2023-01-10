@@ -24,7 +24,7 @@ app.use(cors())
 app.use(express.json())
 app.use(middleware.requestLogger)
 app.use(`/${config.PRIVATE}/api/login`,loginRouter)
-app.use(`/${config.PRIVATE}/api/users`,userRouter)
+app.use(`/${config.PRIVATE}/api/users`,middleware.retrieveToken,userRouter)
 app.use(`/${config.PRIVATE}/api/chats`,middleware.retrieveToken,chatRouter)
 app.use(`/${config.PRIVATE}/api/messages`,middleware.retrieveToken,messageRouter)
 
