@@ -57,6 +57,10 @@ messageRouter.post('/', async(req,res)=>{
     }
     existentChat.messages = existentChat.messages.concat(newMessage._id)
     await existentChat.save()
+
+    var ioSocket = req.app.get('socketio')
+    ioSocket.emit('message-event',existentRemittent._id)
+
     return res.status(201).json(newMessage)
 })
 
