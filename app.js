@@ -32,7 +32,7 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
     logger.info(`Socket-client: ${socket.id} connected`)
-    app.set('socketio', socket)
+    app.set('socketio', io)
 })
 
 app.use(cors())
