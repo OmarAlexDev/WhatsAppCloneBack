@@ -31,7 +31,6 @@ const io = new Server(server, {
 })
 
 io.on("connection", (socket) => {
-    socket.emit('access-event')
     logger.info(`Socket-client: ${socket.id} connected`)
     app.set('socketio', socket)
 })
