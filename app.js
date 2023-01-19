@@ -32,7 +32,15 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
     logger.info(`Socket-client: ${socket.id} connected`)
-    app.set('socketio', socket)
+    socket.on('client-push-message',(args)=>{
+        socket.broadcast.emit('database-update-chat',{...args, type:"message_update"})
+    })
+    socket.on('client-delete-chat',(args)=>{
+        socket.broadcast.emit('database-update-chat',{...args, type:"chat_deletion"})
+    })
+    socket.on('client-update',(args)=>{
+        socket.broadcast.emit('database-update-user',args)
+    })
 })
 
 app.use(cors())

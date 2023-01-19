@@ -20,8 +20,8 @@ messageRouter.post('/', async(req,res)=>{
     if(!(remittent && destinatary && content)||(remittent && destinatary && content)===""){
         return res.status(402).json({error: "Missing parameters"})
     }
-    const existentRemittent = await User.findOne({username:remittent})
-    const existentDestinatary = await User.findOne({username:destinatary})
+    const existentRemittent = await User.findById(remittent)
+    const existentDestinatary = await User.findById(destinatary)
     const decodedToken = jwt.verify(req.token,config.SECRET)
 
     if(!(existentDestinatary && existentRemittent)){
@@ -57,10 +57,6 @@ messageRouter.post('/', async(req,res)=>{
     }
     existentChat.messages = existentChat.messages.concat(newMessage._id)
     await existentChat.save()
-
-    var ioSocket = req.app.get('socketio')
-    ioSocket.emit('message-event',existentRemittent._id)
-
     return res.status(201).json(newMessage)
 })
 
@@ -70,7 +66,7 @@ messageRouter.delete('/:id', async(req,res)=>{
 
     if(!messageToDelete){
         return res.status(400).json({error:"Nonexistent message"})
-    }else if(decodedToken.id!==messageToDelete.remittent.toString() && decodedToken.id!==messageToDelete.destinatary.toString()){
+    }else if(decodedToken.id!==messageToDelete.remittent.toString()){
         return res.status(402).json({error:"Unauthorized token access"})
     }
 

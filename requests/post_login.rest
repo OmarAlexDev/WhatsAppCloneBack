@@ -2,7 +2,7 @@ POST http://localhost:3001/MINKAN/api/login
 Content-Type: application/json
 
 {
-    "username":"test",
-    "password":"test",
-    "rePassword":"test"
+    "username":"test3",
+    "password":"test3",
+    "rePassword":"test3"
 }

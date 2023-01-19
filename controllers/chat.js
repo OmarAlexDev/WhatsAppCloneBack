@@ -16,7 +16,29 @@ chatRouter.get('/:id', async(req,res)=>{
     return res.json(chat)
 })
 
-chatRouter.get('/byUser/:id', async(req,res)=>{
+chatRouter.get('/fromUser/:id/byUser/:destinataryId', async(req,res)=>{
+    const decodedToken = jwt.verify(req.token,config.SECRET)
+    if(decodedToken.id!==req.params.id){
+        return res.status(402).json({error:"Unauthorized token access"})
+    }
+
+    const existingUser = await User.findById(req.params.id)
+    const existingDestinatary = await User.findById(req.params.destinataryId)
+    if(!(existingUser && existingDestinatary)){
+        return res.status(402).json({error:"Nonexisting user id"})
+    }
+
+    const chat = await Chat.find({
+        $or: [
+            {user1:existingUser._id, user2: existingDestinatary._id},
+            {user2:existingUser._id, user1: existingDestinatary._id}
+        ]
+    }).populate('user1',{username:1,state:1,profileImage:1}).populate('user2',{username:1,state:1,profileImage:1}).populate('messages',{content:1,remittent:1,destinatary:1,time:1,active:1})
+
+    return res.json(chat[0])
+})
+
+chatRouter.get('/fromUser/:id', async(req,res)=>{
     const decodedToken = jwt.verify(req.token,config.SECRET)
     if(decodedToken.id!==req.params.id){
         return res.status(402).json({error:"Unauthorized token access"})

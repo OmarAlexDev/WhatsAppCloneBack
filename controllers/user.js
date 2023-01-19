@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 const config = require ('../utils/config')
 const logger = require('../utils/logger')
 const User = require('../models/User')
-const tokenGenerator = require('../utils/tokenGenerator')
+const tokenGenerator = require('../utils/token')
 const userRouter = require('express').Router()
 
 userRouter.get('/',async (req,res)=>{
